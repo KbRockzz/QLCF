@@ -21,7 +21,7 @@ public class Home extends JPanel {
         }
     }
 
-    public Home(String username) {
+    public Home(/*username*/) {
         setLayout(null);
 
         // Load ảnh nền

@@ -8,6 +8,7 @@
 package Interface;
 import Interface.home.Home;
 import Models.NhanVien;
+import Models.NhanVien_DAO;
 
 import javax.swing.*;
 import java.awt.*;
@@ -77,19 +78,21 @@ public class LogIn extends JFrame {
                 JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không được để trống!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
             }
 
-            Models.NhanVien_DAO dao = new Models.NhanVien_DAO();
+            NhanVien_DAO dao = new NhanVien_DAO();
             boolean isValid = false;
+            NhanVien loggedNV = null;
 
             for (NhanVien nv : dao.getAlltbNhanVien()) {
                 if (nv.getUsername().equals(username) && nv.getPassword().equals(password)) {
                     isValid = true;
+                    loggedNV = nv;
                     break;
                 }
             }
 
             if (isValid) {
                 JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
-                new frmMain(username).setVisible(true);
+                new frmMain(loggedNV).setVisible(true);
                 dispose();
             } else {
                 JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);

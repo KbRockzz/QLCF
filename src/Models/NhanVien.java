@@ -8,7 +8,7 @@
 package Models;
 
 public class NhanVien {
-    enum ChucVu {
+    public enum ChucVu {
         NHANVIEN("NhanVien"),
         QUANLY("QuanLy");
 
