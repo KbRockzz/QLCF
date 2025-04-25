@@ -14,6 +14,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LogIn extends JFrame {
+    private JTextField txtUsername;
+    private JPasswordField txtPassword;
+
     public LogIn() {
         setTitle("Đăng nhập");
         setSize(450, 250);
@@ -43,7 +46,7 @@ public class LogIn extends JFrame {
         lblUsername.setBounds(60, 80, 100, 25);
         add(lblUsername);
 
-        JTextField txtUsername = new JTextField();
+        txtUsername = new JTextField();
         txtUsername.setBounds(150, 80, 200, 25);
         add(txtUsername);
 
@@ -53,7 +56,7 @@ public class LogIn extends JFrame {
         lblPassword.setBounds(60, 115, 100, 25);
         add(lblPassword);
 
-        JPasswordField txtPassword = new JPasswordField();
+        txtPassword = new JPasswordField();
         txtPassword.setBounds(150, 115, 200, 25);
         add(txtPassword);
 
@@ -71,35 +74,43 @@ public class LogIn extends JFrame {
 
         // Hành động nút Đăng nhập -> mở Home
         btnLogin.addActionListener(e -> {
-            String username = txtUsername.getText().trim();
-            String password = new String(txtPassword.getPassword());
+            dangNhap();
+        });
 
-            if (username.isBlank() || password.isBlank()) {
-                JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không được để trống!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
-            }
-
-            NhanVien_DAO dao = new NhanVien_DAO();
-            boolean isValid = false;
-            NhanVien loggedNV = null;
-
-            for (NhanVien nv : dao.getAlltbNhanVien()) {
-                if (nv.getUsername().equals(username) && nv.getPassword().equals(password)) {
-                    isValid = true;
-                    loggedNV = nv;
-                    break;
-                }
-            }
-
-            if (isValid) {
-                JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
-                new frmMain(loggedNV).setVisible(true);
-                dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
-            }
+        txtPassword.addActionListener(e -> {
+            dangNhap();
         });
         
         setVisible(true);
+    }
+
+    public void dangNhap() {
+        String username = txtUsername.getText().trim();
+        String password = new String(txtPassword.getPassword());
+
+        if (username.isBlank() || password.isBlank()) {
+            JOptionPane.showMessageDialog(this, "Tên đăng nhập hoặc mật khẩu không được để trống!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
+        }
+
+        NhanVien_DAO dao = new NhanVien_DAO();
+        boolean isValid = false;
+        NhanVien loggedNV = null;
+
+        for (NhanVien nv : dao.getAlltbNhanVien()) {
+            if (nv.getUsername().equals(username) && nv.getPassword().equals(password)) {
+                isValid = true;
+                loggedNV = nv;
+                break;
+            }
+        }
+
+        if (isValid) {
+            JOptionPane.showMessageDialog(this, "Đăng nhập thành công!");
+            new frmMain(loggedNV).setVisible(true);
+            dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Sai tên đăng nhập hoặc mật khẩu!", "Lỗi đăng nhập", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
 

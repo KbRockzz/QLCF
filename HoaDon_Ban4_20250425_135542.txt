@@ -1,0 +1,8 @@
+===== HÓA ĐƠN =====
+Bàn: Bàn 4
+
+Tên món              SL         Giá        Thành tiền
+Khoai tây chiên      2          40000      80000     
+Cafe Sữa             2          50000      100000    
+
+TỔNG TIỀN: 180000 VND

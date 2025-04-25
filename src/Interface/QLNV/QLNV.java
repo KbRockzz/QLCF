@@ -30,23 +30,23 @@ public class QLNV extends JPanel {
         pnlLeft.setPreferredSize(new Dimension(180, 0));
 
         // Các nút điều hướng trang quản lý
-        JButton btnQLNV = new JButton("Quản Lý Nhân Viên");
-        btnQLNV.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnQLNV.setMaximumSize(new Dimension(160, 40));
-        pnlLeft.add(Box.createVerticalStrut(15));
-        pnlLeft.add(btnQLNV);
+//        JButton btnQLNV = new JButton("Quản Lý Nhân Viên");
+//        btnQLNV.setAlignmentX(Component.CENTER_ALIGNMENT);
+//        btnQLNV.setMaximumSize(new Dimension(160, 40));
+//        pnlLeft.add(Box.createVerticalStrut(15));
+//        pnlLeft.add(btnQLNV);
 
-        JButton btnQLThucDon = new JButton("Quản Lý Thực Đơn");
-        btnQLThucDon.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnQLThucDon.setMaximumSize(new Dimension(160, 40));
-        pnlLeft.add(Box.createVerticalStrut(15));
-        pnlLeft.add(btnQLThucDon);
-
-        JButton btnQLBan = new JButton("Quản Lý Bàn");
-        btnQLBan.setAlignmentX(Component.CENTER_ALIGNMENT);
-        btnQLBan.setMaximumSize(new Dimension(160, 40));
-        pnlLeft.add(Box.createVerticalStrut(15));
-        pnlLeft.add(btnQLBan);
+//        JButton btnQLThucDon = new JButton("Quản Lý Thực Đơn");
+//        btnQLThucDon.setAlignmentX(Component.CENTER_ALIGNMENT);
+//        btnQLThucDon.setMaximumSize(new Dimension(160, 40));
+//        pnlLeft.add(Box.createVerticalStrut(15));
+//        pnlLeft.add(btnQLThucDon);
+//
+//        JButton btnQLBan = new JButton("Quản Lý Bàn");
+//        btnQLBan.setAlignmentX(Component.CENTER_ALIGNMENT);
+//        btnQLBan.setMaximumSize(new Dimension(160, 40));
+//        pnlLeft.add(Box.createVerticalStrut(15));
+//        pnlLeft.add(btnQLBan);
 
         // Các nút thao tác
         JButton btnThem = new JButton("Thêm Nhân Viên");
@@ -136,6 +136,35 @@ public class QLNV extends JPanel {
         Models.NhanVien_DAO dao = new Models.NhanVien_DAO();
         ArrayList<NhanVien> nhanVienList = dao.getAlltbNhanVien();
         updateTable(tblNhanVien, nhanVienList);
+
+        txtTim.addActionListener(e -> {
+            String tuKhoa = txtTim.getText().trim().toLowerCase();
+            if (tuKhoa.isEmpty()) return;
+
+            int rowCount = model.getRowCount();
+
+            boolean found = false;
+
+            for (int i = 0; i < rowCount; i++) {
+                // Duyệt các cột để tìm từ khóa trong bất kỳ cột nào
+                for (int j = 0; j < model.getColumnCount(); j++) {
+                    Object value = model.getValueAt(i, j);
+                    if (value != null && value.toString().toLowerCase().contains(tuKhoa)) {
+                        // Tìm thấy thì chọn dòng
+                        tblNhanVien.setRowSelectionInterval(i, i);
+                        tblNhanVien.scrollRectToVisible(tblNhanVien.getCellRect(i, 0, true));
+                        found = true;
+                        break;
+                    }
+                }
+                if (found) break;
+            }
+
+            if (!found) {
+                JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+
     }
 
     private void updateTable(JTable table, ArrayList<NhanVien> nhanVienList) {
