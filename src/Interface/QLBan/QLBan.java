@@ -1,23 +1,27 @@
 package Interface.QLBan;
 
+import Mysql.ConnectSql;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 
 public class QLBan extends JPanel {
     private final JPanel pnlLeft, pnlCenter, pnlRight;
-    private JLabel lblBanInfo;
-    private JLabel lblStatus;
-    private JButton btnGoiMon;
-    private JButton btnDatCho;
-    private JButton btnThanhToan;
+    private JLabel lblBanInfo, lblStatus, lblTongTien;
+    private JButton btnGoiMon, btnDatCho, btnThanhToan;
     private DefaultTableModel tableModel;
     private JTable tableMon;
-    private JLabel lblTongTien;
     private Ban banDangChon;
     private Map<String, List<Mon>> danhMucMon;
 
@@ -114,6 +118,7 @@ public class QLBan extends JPanel {
                 lblStatus.setText("Status: Đặt trước");
             }
         });
+
         btnThanhToan.addActionListener(e -> {
             if (banDangChon != null) {
                 List<HoaDon.ChiTietMon> dsMon = new ArrayList<>();
@@ -124,17 +129,13 @@ public class QLBan extends JPanel {
                     dsMon.add(new HoaDon.ChiTietMon(ten, sl, gia));
                 }
 
-                int tong = 0;
-                for (HoaDon.ChiTietMon ct : dsMon) {
-                    tong += ct.thanhTien();
-                }
-
+                int tong = dsMon.stream().mapToInt(HoaDon.ChiTietMon::thanhTien).sum();
                 HoaDon hoaDon = new HoaDon(banDangChon, dsMon, tong);
 
-                // Hiện hóa đơn
                 hienThiHoaDon(hoaDon);
+                xuatFileHoaDon(hoaDon);
+                luuHoaDonVaoSQL(hoaDon);
 
-                // Reset lại bàn và bảng
                 tableModel.setRowCount(0);
                 lblTongTien.setText("Tổng: 0 VND");
                 banDangChon.setTrangThai("Trống");
@@ -142,8 +143,60 @@ public class QLBan extends JPanel {
                 btnThanhToan.setVisible(false);
             }
         });
-
     }
+
+    private void xuatFileHoaDon(HoaDon hoaDon) {
+        try {
+            String filename = "HoaDon_Ban" + hoaDon.getBan().getMaBan() + "_" +
+                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".txt";
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+
+            writer.write("===== HÓA ĐƠN =====\n");
+            writer.write("Bàn: " + hoaDon.getBan().getTenBan() + "\n\n");
+            writer.write(String.format("%-20s %-10s %-10s %-10s\n", "Tên món", "SL", "Giá", "Thành tiền"));
+
+            for (HoaDon.ChiTietMon ct : hoaDon.getDsMon()) {
+                writer.write(String.format("%-20s %-10d %-10d %-10d\n",
+                        ct.getTenMon(), ct.getSoLuong(), ct.getGia(), ct.thanhTien()));
+            }
+
+            writer.write("\nTỔNG TIỀN: " + hoaDon.getTongTien() + " VND\n");
+            writer.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void luuHoaDonVaoSQL(HoaDon hoaDon) {
+        try (Connection conn = ConnectSql.getConnection()) {
+            String insertHD = "INSERT INTO HoaDon (MaBan, NgayTao, TongTien) VALUES (?, GETDATE(), ?)";
+            PreparedStatement psHD = conn.prepareStatement(insertHD, Statement.RETURN_GENERATED_KEYS);
+            psHD.setInt(1, hoaDon.getBan().getMaBan());
+            psHD.setInt(2, hoaDon.getTongTien());
+            psHD.executeUpdate();
+
+            ResultSet rs = psHD.getGeneratedKeys();
+            int maHoaDon = -1;
+            if (rs.next()) {
+                maHoaDon = rs.getInt(1);
+            }
+
+            String insertCT = "INSERT INTO ChiTietHoaDon (MaHoaDon, TenMon, SoLuong, Gia, ThanhTien) VALUES (?, ?, ?, ?, ?)";
+            PreparedStatement psCT = conn.prepareStatement(insertCT);
+            for (HoaDon.ChiTietMon ct : hoaDon.getDsMon()) {
+                psCT.setInt(1, maHoaDon);
+                psCT.setString(2, ct.getTenMon());
+                psCT.setInt(3, ct.getSoLuong());
+                psCT.setInt(4, ct.getGia());
+                psCT.setInt(5, ct.thanhTien());
+                psCT.addBatch();
+            }
+            psCT.executeBatch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void hienThiHoaDon(HoaDon hoaDon) {
         StringBuilder sb = new StringBuilder();
         sb.append("===== HÓA ĐƠN =====\n");
@@ -185,20 +238,15 @@ public class QLBan extends JPanel {
     }
 
     private void hienThiMonTheoLoai(String loai) {
-        // Xóa component CENTER cũ nếu có
         BorderLayout layout = (BorderLayout) pnlRight.getLayout();
         Component centerComp = layout.getLayoutComponent(BorderLayout.CENTER);
-        if (centerComp != null) {
-            pnlRight.remove(centerComp);
-        }
+        if (centerComp != null) pnlRight.remove(centerComp);
 
-        // Tạo danh sách món mới
         JPanel pnlMon = new JPanel(new GridLayout(0, 1, 5, 5));
-        pnlMon.setBackground(new Color(245, 245, 245)); // Màu nền nhẹ
+        pnlMon.setBackground(new Color(245, 245, 245));
 
         for (Mon mon : danhMucMon.get(loai)) {
             JButton btn = new JButton(mon.getTenMon() + " - " + mon.getGia() + " VND");
-            btn.setFocusPainted(false);
             btn.setBackground(new Color(230, 230, 255));
             btn.setFont(new Font("Arial", Font.PLAIN, 14));
             btn.addActionListener(e -> themMon(mon));
@@ -207,28 +255,8 @@ public class QLBan extends JPanel {
 
         JScrollPane scrollPane = new JScrollPane(pnlMon);
         pnlRight.add(scrollPane, BorderLayout.CENTER);
-
-        // Cập nhật lại giao diện
         pnlRight.revalidate();
         pnlRight.repaint();
-    }
-
-
-
-    private void chonBan(Ban ban) {
-        this.banDangChon = ban;
-        lblBanInfo.setText("Bàn: " + ban.getTenBan());
-        lblStatus.setText("Status: " + ban.getTrangThai());
-        tableModel.setRowCount(0);
-        lblTongTien.setText("Tổng: 0 VND");
-        btnThanhToan.setVisible(false);
-    }
-
-    private void goiMon(ActionEvent e) {
-        if (banDangChon != null) {
-            banDangChon.setTrangThai("Có khách");
-            lblStatus.setText("Status: Có khách");
-        }
     }
 
     private void themMon(Mon mon) {
@@ -256,6 +284,22 @@ public class QLBan extends JPanel {
             tong += sl * gia;
         }
         lblTongTien.setText("Tổng: " + tong + " VND");
+    }
+
+    private void chonBan(Ban ban) {
+        this.banDangChon = ban;
+        lblBanInfo.setText("Bàn: " + ban.getTenBan());
+        lblStatus.setText("Status: " + ban.getTrangThai());
+        tableModel.setRowCount(0);
+        lblTongTien.setText("Tổng: 0 VND");
+        btnThanhToan.setVisible(false);
+    }
+
+    private void goiMon(ActionEvent e) {
+        if (banDangChon != null) {
+            banDangChon.setTrangThai("Có khách");
+            lblStatus.setText("Status: Có khách");
+        }
     }
 
     private Color getMauBangTrangThai(String status) {
