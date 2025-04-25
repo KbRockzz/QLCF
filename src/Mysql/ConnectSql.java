@@ -20,8 +20,18 @@ public class ConnectSql {
     }
 
     public static Connection getConnection() {
-        return getInstance().connection;
+        String url = "jdbc:sqlserver://localhost:1433;databaseName=QLCF;encrypt=false;";
+        String user = "sa";
+        String password = "YourStrong@Passw0rd";
+
+        try {
+            return DriverManager.getConnection(url, user, password);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
+
 
     private ConnectSql() {
         String url = "jdbc:sqlserver://localhost:1433;databaseName=QLCF;encrypt=false;";
