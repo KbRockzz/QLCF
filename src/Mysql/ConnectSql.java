@@ -26,7 +26,7 @@ public class ConnectSql {
     private ConnectSql() {
         String url = "jdbc:sqlserver://localhost:1433;databaseName=QLCF;encrypt=false;";
         String user = "sa";
-        String password = "sapassword"; // thay bằng mật khẩu thật của bạn
+        String password = "YourStrong@Passw0rd"; // thay bằng mật khẩu thật của bạn
 
         try {
             connection = DriverManager.getConnection(url, user, password);

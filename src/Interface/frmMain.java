@@ -72,6 +72,7 @@ public class frmMain extends JFrame {
 
         JButton btnDangXuat = new JButton("ĐĂNG XUẤT");
         btnDangXuat.setPreferredSize(btnSize);
+        btnDangXuat.addActionListener(e -> System.exit(0));
         navbar.add(btnDangXuat);
 
         JLabel lblUser = new JLabel("Nhân viên: " + currentUser.getUsername());

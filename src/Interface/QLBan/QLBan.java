@@ -1,4 +1,3 @@
-// Đã cập nhật UI đẹp hơn, bố cục rõ ràng, màu sắc nổi bật, thêm danh mục món phong phú hơn
 package Interface.QLBan;
 
 import javax.swing.*;
