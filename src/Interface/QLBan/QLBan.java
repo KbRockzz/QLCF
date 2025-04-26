@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.*;
@@ -162,8 +163,17 @@ public class QLBan extends JPanel {
 
     private void xuatFileHoaDon(HoaDon hoaDon) {
         try {
-            String filename = "HoaDon_Ban" + hoaDon.getBan().getMaBan() + "_" +
+            // Create folder path
+            String folderPath = "out/HoaDon";
+            File folder = new File(folderPath);
+            if (!folder.exists()) {
+                folder.mkdirs(); // Create the folder if it doesn't exist
+            }
+
+            // Create filename inside the folder
+            String filename = folderPath + "/HoaDon_Ban" + hoaDon.getBan().getMaBan() + "_" +
                     LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss")) + ".txt";
+
             BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 
             writer.write("===== HÓA ĐƠN =====\n");
@@ -181,6 +191,7 @@ public class QLBan extends JPanel {
             ex.printStackTrace();
         }
     }
+
 
     private void luuHoaDonVaoSQL(HoaDon hoaDon) {
         try (Connection conn = ConnectSql.getConnection()) {

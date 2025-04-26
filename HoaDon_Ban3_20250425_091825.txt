@@ -1,9 +1,0 @@
-===== HÓA ĐƠN =====
-Bàn: Bàn 3
-
-Tên món              SL         Giá        Thành tiền
-Lipton đá            1          20000      20000     
-Khoai tây chiên      10         40000      400000    
-Gà rán               1          50000      50000     
-
-TỔNG TIỀN: 470000 VND

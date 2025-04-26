@@ -1,9 +1,0 @@
-===== HÓA ĐƠN =====
-Bàn: Bàn 2
-
-Tên món              SL         Giá        Thành tiền
-Khoai tây chiên      2          40000      80000     
-Gà rán               3          50000      150000    
-Sinh tố bơ           1          30000      30000     
-
-TỔNG TIỀN: 260000 VND
