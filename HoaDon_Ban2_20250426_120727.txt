@@ -1,0 +1,8 @@
+===== HÓA ĐƠN =====
+Bàn: Bàn 2
+
+Tên món              SL         Giá        Thành tiền
+Sinh tố bơ           7          30000      210000    
+Sinh tố xoài         4          30000      120000    
+
+TỔNG TIỀN: 330000 VND

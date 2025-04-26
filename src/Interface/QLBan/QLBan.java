@@ -1,5 +1,7 @@
 package Interface.QLBan;
 
+import Interface.QLThucDon.Mon;
+import Interface.QLThucDon.QLThucDon;
 import Mysql.ConnectSql;
 
 import javax.swing.*;
@@ -24,6 +26,7 @@ public class QLBan extends JPanel {
     private JTable tableMon;
     private Ban banDangChon;
     private Map<String, List<Mon>> danhMucMon;
+    private Map<Ban, JButton> mapBanButton = new HashMap<>();
 
     public QLBan() {
         setLayout(new BorderLayout(10, 10));
@@ -47,11 +50,10 @@ public class QLBan extends JPanel {
 
     private void taoPanelBan() {
         JPanel pnlBan = new JPanel(new GridLayout(5, 2, 10, 10));
-        Random rand = new Random();
+        mapBanButton = new HashMap<>(); // Khởi tạo lại map
 
         for (int i = 1; i <= 10; i++) {
-            String[] trangThai = {"Trống", "Có khách", "Đặt trước"};
-            String status = trangThai[rand.nextInt(3)];
+            String status = "Trống";
             Ban ban = new Ban(i, "Bàn " + i, status);
             JButton btn = new JButton(ban.getTenBan());
             btn.setBackground(getMauBangTrangThai(ban.getTrangThai()));
@@ -61,8 +63,11 @@ public class QLBan extends JPanel {
             btn.setForeground(Color.WHITE);
             btn.setFont(new Font("Arial", Font.BOLD, 12));
             btn.setPreferredSize(new Dimension(100, 40));
+
             btn.addActionListener(e -> chonBan(ban));
             pnlBan.add(btn);
+
+            mapBanButton.put(ban, btn); // Lưu vào map để dễ thay đổi màu sau này
         }
 
         JPanel legend = new JPanel(new GridLayout(3, 1));
@@ -73,6 +78,8 @@ public class QLBan extends JPanel {
         pnlLeft.add(pnlBan, BorderLayout.CENTER);
         pnlLeft.add(legend, BorderLayout.SOUTH);
     }
+
+
 
     private void taoPanelThongTin() {
         JPanel pnlTop = new JPanel(new GridLayout(4, 1, 5, 5));
@@ -116,6 +123,10 @@ public class QLBan extends JPanel {
             if (banDangChon != null) {
                 banDangChon.setTrangThai("Đặt trước");
                 lblStatus.setText("Status: Đặt trước");
+                JButton btn = mapBanButton.get(banDangChon);
+                if (btn != null) {
+                    btn.setBackground(getMauBangTrangThai("Đặt trước"));
+                }
             }
         });
 
@@ -140,6 +151,10 @@ public class QLBan extends JPanel {
                 lblTongTien.setText("Tổng: 0 VND");
                 banDangChon.setTrangThai("Trống");
                 lblStatus.setText("Status: Trống");
+                JButton btn = mapBanButton.get(banDangChon);
+                if (btn != null) {
+                    btn.setBackground(getMauBangTrangThai("Trống"));
+                }
                 btnThanhToan.setVisible(false);
             }
         });
@@ -219,11 +234,32 @@ public class QLBan extends JPanel {
 
     private void taoPanelMenu() {
         danhMucMon = new HashMap<>();
-        danhMucMon.put("Cà phê", Arrays.asList(new Mon("Cafe Sữa", 50000), new Mon("Bạc xỉu", 25000), new Mon("Đen đá", 25000)));
-        danhMucMon.put("Nước - Lon", Arrays.asList(new Mon("Pepsi", 20000), new Mon("7Up", 20000)));
-        danhMucMon.put("Lipton - Trà", Arrays.asList(new Mon("Lipton đá", 20000), new Mon("Trà đào", 30000)));
-        danhMucMon.put("Sinh tố", Arrays.asList(new Mon("Sinh tố bơ", 30000), new Mon("Sinh tố xoài", 30000)));
-        danhMucMon.put("Đồ ăn nhanh", Arrays.asList(new Mon("Khoai tây chiên", 40000), new Mon("Gà rán", 50000)));
+        danhMucMon.put("Cà phê", Arrays.asList(
+                new Mon("", "Cafe Sữa", "", 50000, true),
+                new Mon("", "Bạc xỉu", "", 25000, true),
+                new Mon("", "Đen đá", "", 25000, true)
+        ));
+
+        danhMucMon.put("Nước - Lon", Arrays.asList(
+                new Mon("", "Pepsi", "", 20000, true),
+                new Mon("", "7Up", "", 20000, true)
+        ));
+
+        danhMucMon.put("Lipton - Trà", Arrays.asList(
+                new Mon("", "Lipton đá", "", 20000, true),
+                new Mon("", "Trà đào", "", 30000, true)
+        ));
+
+        danhMucMon.put("Sinh tố", Arrays.asList(
+                new Mon("", "Sinh tố bơ", "", 30000, true),
+                new Mon("", "Sinh tố xoài", "", 30000, true)
+        ));
+
+        danhMucMon.put("Đồ ăn nhanh", Arrays.asList(
+                new Mon("", "Khoai tây chiên", "", 40000, true),
+                new Mon("", "Gà rán", "", 50000, true)
+        ));
+
 
         JPanel pnlLoai = new JPanel(new GridLayout(0, 1, 5, 5));
         for (String loai : danhMucMon.keySet()) {
@@ -246,7 +282,7 @@ public class QLBan extends JPanel {
         pnlMon.setBackground(new Color(245, 245, 245));
 
         for (Mon mon : danhMucMon.get(loai)) {
-            JButton btn = new JButton(mon.getTenMon() + " - " + mon.getGia() + " VND");
+            JButton btn = new JButton(mon.getTenMon() + " - " + mon.getDonGia() + " VND");
             btn.setBackground(new Color(230, 230, 255));
             btn.setFont(new Font("Arial", Font.PLAIN, 14));
             btn.addActionListener(e -> themMon(mon));
@@ -270,7 +306,7 @@ public class QLBan extends JPanel {
             }
         }
         if (!found) {
-            tableModel.addRow(new Object[]{mon.getTenMon(), 1, mon.getGia()});
+            tableModel.addRow(new Object[]{mon.getTenMon(), 1, mon.getDonGia()});
         }
         capNhatTongTien();
         btnThanhToan.setVisible(true);
@@ -299,8 +335,14 @@ public class QLBan extends JPanel {
         if (banDangChon != null) {
             banDangChon.setTrangThai("Có khách");
             lblStatus.setText("Status: Có khách");
+
+            JButton btn = mapBanButton.get(banDangChon);
+            if (btn != null) {
+                btn.setBackground(getMauBangTrangThai("Có khách"));
+            }
         }
     }
+
 
     private Color getMauBangTrangThai(String status) {
         return switch (status) {
@@ -311,16 +353,12 @@ public class QLBan extends JPanel {
         };
     }
 
-    static class Mon {
-        private final String tenMon;
-        private final int gia;
-
-        public Mon(String tenMon, int gia) {
-            this.tenMon = tenMon;
-            this.gia = gia;
-        }
-
-        public String getTenMon() { return tenMon; }
-        public int getGia() { return gia; }
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("Quản Lý Thực Đơn");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(1000, 600);
+        frame.add(new QLBan());
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 }
