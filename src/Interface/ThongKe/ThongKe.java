@@ -145,15 +145,4 @@ public class ThongKe extends JPanel {
             JOptionPane.showMessageDialog(this, "Lỗi truy vấn dữ liệu: " + e.getMessage(), "Lỗi", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame f = new JFrame("📊 Thống kê doanh thu");
-            f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            f.setSize(1000, 600);
-            f.add(new ThongKe());
-            f.setLocationRelativeTo(null);
-            f.setVisible(true);
-        });
-    }
 }

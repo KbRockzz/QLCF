@@ -7,6 +7,7 @@
 
 package Models;
 
+import Entity.NhanVien;
 import Mysql.ConnectSql;
 
 import java.sql.*;

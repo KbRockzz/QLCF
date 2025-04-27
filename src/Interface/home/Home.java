@@ -31,38 +31,5 @@ public class Home extends JPanel {
         backgroundPanel.setBounds(0, 0, 900, 600);
         add(backgroundPanel);
 
-        // Navbar dùng FlowLayout
-//        JPanel navbar = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
-//        navbar.setBounds(0, 0, 900, 60);
-//        navbar.setBackground(new Color(230, 230, 230));
-//        backgroundPanel.add(navbar);
-//
-//        Dimension btnSize = new Dimension(110, 40);
-//
-//        JButton btnTrangChu = new JButton("TRANG CHỦ");
-//        btnTrangChu.setPreferredSize(btnSize);
-//        navbar.add(btnTrangChu);
-//
-//        JButton btnBanHang = new JButton("BÁN HÀNG");
-//        btnBanHang.setPreferredSize(btnSize);
-//        navbar.add(btnBanHang);
-//
-//        JButton btnQuanLy = new JButton("QUẢN LÝ");
-//        btnQuanLy.setPreferredSize(btnSize);
-//        navbar.add(btnQuanLy);
-//
-//        JButton btnThongKe = new JButton("THỐNG KÊ");
-//        btnThongKe.setPreferredSize(btnSize);
-//        navbar.add(btnThongKe);
-//
-//        JButton btnDangXuat = new JButton("ĐĂNG XUẤT");
-//        btnDangXuat.setPreferredSize(btnSize);
-//        navbar.add(btnDangXuat);
-
-//        JLabel lblUser = new JLabel("Nhân viên: " + username);
-//        lblUser.setFont(new Font("Tahoma", Font.BOLD, 12));
-//        navbar.add(lblUser);
-
-
     }
 }

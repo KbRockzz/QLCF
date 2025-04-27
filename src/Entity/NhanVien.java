@@ -5,7 +5,7 @@
  * @created: 4/24/2025
  */
 
-package Models;
+package Entity;
 
 public class NhanVien {
     public enum ChucVu {

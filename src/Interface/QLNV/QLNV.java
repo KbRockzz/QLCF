@@ -6,8 +6,7 @@
  */
 package Interface.QLNV;
 
-import Models.NhanVien;
-import Models.NhanVien_DAO;
+import Entity.NhanVien;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -28,25 +27,6 @@ public class QLNV extends JPanel {
         JPanel pnlLeft = new JPanel();
         pnlLeft.setLayout(new BoxLayout(pnlLeft, BoxLayout.Y_AXIS));
         pnlLeft.setPreferredSize(new Dimension(180, 0));
-
-        // Các nút điều hướng trang quản lý
-//        JButton btnQLNV = new JButton("Quản Lý Nhân Viên");
-//        btnQLNV.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        btnQLNV.setMaximumSize(new Dimension(160, 40));
-//        pnlLeft.add(Box.createVerticalStrut(15));
-//        pnlLeft.add(btnQLNV);
-
-//        JButton btnQLThucDon = new JButton("Quản Lý Thực Đơn");
-//        btnQLThucDon.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        btnQLThucDon.setMaximumSize(new Dimension(160, 40));
-//        pnlLeft.add(Box.createVerticalStrut(15));
-//        pnlLeft.add(btnQLThucDon);
-//
-//        JButton btnQLBan = new JButton("Quản Lý Bàn");
-//        btnQLBan.setAlignmentX(Component.CENTER_ALIGNMENT);
-//        btnQLBan.setMaximumSize(new Dimension(160, 40));
-//        pnlLeft.add(Box.createVerticalStrut(15));
-//        pnlLeft.add(btnQLBan);
 
         // Các nút thao tác
         JButton btnThem = new JButton("Thêm Nhân Viên");
@@ -311,15 +291,5 @@ public class QLNV extends JPanel {
                 JOptionPane.showMessageDialog(this, "Xóa nhân viên thất bại!");
             }
         }
-    }
-
-
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Quản lý nhân viên");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(900, 600);
-        frame.add(new QLNV());
-        frame.setVisible(true);
     }
 }

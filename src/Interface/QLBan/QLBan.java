@@ -1,7 +1,8 @@
 package Interface.QLBan;
 
-import Interface.QLThucDon.Mon;
-import Interface.QLThucDon.QLThucDon;
+import Entity.Ban;
+import Entity.HoaDon;
+import Entity.Mon;
 import Mysql.ConnectSql;
 
 import javax.swing.*;
@@ -362,14 +363,5 @@ public class QLBan extends JPanel {
             case "Đặt trước" -> new Color(255, 105, 180);
             default -> Color.GRAY;
         };
-    }
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Quản Lý Thực Đơn");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 600);
-        frame.add(new QLBan());
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
     }
 }

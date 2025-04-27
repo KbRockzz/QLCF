@@ -6,8 +6,7 @@
  */
 
 package Interface;
-import Interface.home.Home;
-import Models.NhanVien;
+import Entity.NhanVien;
 import Models.NhanVien_DAO;
 
 import javax.swing.*;

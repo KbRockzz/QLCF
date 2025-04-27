@@ -1,4 +1,4 @@
-package Interface.QLThucDon;
+package Entity;
 
 public class Mon {
     private String maMon;

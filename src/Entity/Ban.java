@@ -1,4 +1,4 @@
-package Interface.QLBan;
+package Entity;
 
 public class Ban {
     private int maBan;

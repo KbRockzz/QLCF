@@ -4,7 +4,7 @@ import Interface.QLBan.QLBan;
 import Interface.QLNV.QLNV;
 import Interface.ThongKe.ThongKe;
 import Interface.home.Home;
-import Models.NhanVien;
+import Entity.NhanVien;
 
 import javax.swing.*;
 import java.awt.*;

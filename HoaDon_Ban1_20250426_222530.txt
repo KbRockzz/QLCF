@@ -1,0 +1,9 @@
+===== HÓA ĐƠN =====
+Bàn: Bàn 1
+
+Tên món              SL         Giá        Thành tiền
+Cafe Sữa             1          50000      50000     
+Bạc xỉu              1          25000      25000     
+Đen đá               1          25000      25000     
+
+TỔNG TIỀN: 100000 VND

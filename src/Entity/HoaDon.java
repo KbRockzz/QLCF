@@ -1,4 +1,4 @@
-package Interface.QLBan;
+package Entity;
 
 import java.util.List;
 
